@@ -26,12 +26,25 @@ module.exports = function(app) {
       usertype: req.body.usertype,
     })
       .then(function() {
+
         res.redirect(307, "/api/login");
+        
       })
       .catch(function(err) {
         res.status(401).json(err);
       });
   });
+
+  //Add winery
+  app.post("/api/addwinery", function(req, res){
+    db.Wineries.create(req.body).then(function(result){
+      res.json(result);
+    }).catch(function(err){
+      res.status(401).json(err);
+    });
+  });
+
+
 
   // Route for logging user out
   app.get("/logout", function(req, res) {
@@ -53,4 +66,14 @@ module.exports = function(app) {
       });
     }
   });
+
+  app.get("/api/wineries_data/:id", function(req, res){
+    db.Wineries.findAll({
+      where: {
+        FK_Userid: req.params.id
+      }
+    }).then(function(result){
+      res.json(result)
+    })
+  })
 };

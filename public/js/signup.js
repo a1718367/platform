@@ -22,6 +22,7 @@ $(document).ready(function() {
     signUpUser(userData.username, userData.email, userData.password, userData.usertype);
     emailInput.val("");
     passwordInput.val("");
+    $('#username-input').val("");
   });
 
   // Does a post to the signup route. If successful, we are redirected to the members page
@@ -34,7 +35,13 @@ $(document).ready(function() {
       usertype: type,
     })
       .then(function(data) {
-        window.location.replace("/members");
+        let type = data.usertype;
+        if(type == "patron"){
+          window.location.replace("/members");
+        }else{
+          window.location.replace("/vendor");
+        }
+        
         // If there's an error, handle it by throwing up a bootstrap alert
       })
       .catch(handleLoginErr);
