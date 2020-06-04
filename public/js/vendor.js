@@ -31,7 +31,7 @@ $(document).ready(function() {
                 userid: memberid,
             }
             console.log(wineryData);
-            addwinery(wineryData.wineryname, wineryData.wineryaddress,wineryData.winerypostcode,wineryData.wineryphone, wineryData.wineryemail, wineryData.userid)
+            addwinery(wineryData.wineryname, wineryData.wineryaddress,wineryData.winerypostcode, wineryData.wineryphone, wineryData.wineryemail, wineryData.userid)
             wname.val("");
             waddress.val("");
             wpostcode.val("");
@@ -40,6 +40,17 @@ $(document).ready(function() {
         });
 
         getwineries(memberid);
+        
+    });
+
+    $(document).on('click','.winerybtn', function(){
+        const wineryid = $(this).attr("data");
+        console.log(wineryid)
+        wineryenter(wineryid)
+        // window.location.replace("/winery").then(function(){
+            
+        // })
+        
         
     })
 
@@ -77,14 +88,24 @@ $(document).ready(function() {
         
     };
 
+    function wineryenter(id){
+        $.post("/api/wineryinfo/", {
+            wineryid: id
+        }).then(function(result){
+            console.log(result)
+        })
+    }
+
     function renderwineries(data){
         const block = `<div class="card border-dark mb-3">
-               <div class="card-header">${data.wineryname}</div>
+        
+               <div class="card-header">${data.wineryname}<span><button class="btn btn-success ml-5 winerybtn" data="${data.id}">Enter</button></span></div>
                <div class="card-body text-dark">
                  <h5 class="card-title" data=${data.id}>${data.wineryname}</h5>
                  <p class="card-text">Address: ${data.wineaddress}</p>
                  <p class="card-text">Email: ${data.wineemail}</p>
-                 <p class="card-text">Phone: ${data.phone}</p>
+                 <a href="/winery?winery_id=${data.id}">${data.wineryname}</a>
+                 <p class="card-text">Phone: ${data.winephone}</p>
                </div>
              </div>`
              return block

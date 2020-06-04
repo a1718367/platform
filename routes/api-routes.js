@@ -1,8 +1,11 @@
 // Requiring our models and passport as we've configured it
-var db = require("../models");
-var passport = require("../config/passport");
+const db = require("../models");
+const passport = require("../config/passport");
+const express = require("express");
+const router = express.Router();
 
 module.exports = function(app) {
+  
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
   // Otherwise the user will be sent an error
@@ -75,5 +78,27 @@ module.exports = function(app) {
     }).then(function(result){
       res.json(result)
     })
-  })
+  });
+
+  app.post("/api/wineryinfo", function(req, res){
+    db.Wineries.findAll({
+      where: {
+        id: req.body.wineryid
+      }
+    }).then(function(result){
+      res.json(result)
+    })
+  });
+
+  app.get("/api/winery", function(req, res){
+    var query = {};
+    if(req.query.winery_id){
+      query.id = req.query.winery_id;
+    }
+    db.Wineries.findAll({
+      where: query
+    }).then(function(result){
+      res.json(result);
+    });
+  });
 };
