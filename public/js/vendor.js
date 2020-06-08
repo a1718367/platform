@@ -1,6 +1,4 @@
 $(document).ready(function() {
-    // This file just does a GET request to figure out which user is logged in
-    // and updates the HTML on the page
 
     let memberid;
     const wname = $('#wineryname-input');
@@ -16,8 +14,6 @@ $(document).ready(function() {
     var cday = moment().format('dddd, Do MMM YYYY, h:mm:ss a');
     $('#currentday').text(cday);
 
-    
-
     $.get("/api/user_data").then(function(data) {
       $(".member-name").text(data.email);
       $('.memberid').text(data.id);
@@ -25,30 +21,29 @@ $(document).ready(function() {
 
       return memberid;
     }).then(function(memberid){
-        
-
-        $('form.addwinery').on('submit', function(event){
-            event.preventDefault();
-            const wineryData = {
-                wineryname: $('#wineryname-input').val().trim(),
-                wineryaddress: $('#wineaddress-input').val().trim(),
-                winerypostcode: $('#winepostcode-input').val().trim(),
-                wineryphone: $('#winephone-input').val().trim(),
-                wineryemail: $('#wineemail-input').val().trim(),
-                userid: memberid,
-            }
-            console.log(wineryData);
-            addwinery(wineryData.wineryname, wineryData.wineryaddress,wineryData.winerypostcode, wineryData.wineryphone, wineryData.wineryemail, wineryData.userid)
-            wname.val("");
-            waddress.val("");
-            wpostcode.val("");
-            wphone.val("");
-            wemail.val("");
-
-        });
-
         getwineries(memberid);
+        getwineries_unc(memberid);
         
+    });
+
+    $('form.addwinery').on('submit', function(event){
+        event.preventDefault();
+        const wineryData = {
+            wineryname: $('#wineryname-input').val().trim(),
+            wineryaddress: $('#wineaddress-input').val().trim(),
+            winerypostcode: $('#winepostcode-input').val().trim(),
+            wineryphone: $('#winephone-input').val().trim(),
+            wineryemail: $('#wineemail-input').val().trim(),
+            userid: memberid,
+        }
+        console.log(wineryData);
+        addwinery(wineryData.wineryname, wineryData.wineryaddress,wineryData.winerypostcode, wineryData.wineryphone, wineryData.wineryemail, wineryData.userid)
+        wname.val("");
+        waddress.val("");
+        wpostcode.val("");
+        wphone.val("");
+        wemail.val("");
+
     });
 
     $(document).on('click','.winerybtn', function(){
@@ -59,8 +54,17 @@ $(document).ready(function() {
         winerydisplay.style.display = "none";
         winerydetail.style.display = "block";
         
-        
     });
+
+    $(document).on('click', '.delwinerybtn', function(){
+        const delwineid = $(this).attr("data");
+        const data = {
+            id: delwineid,
+            current: 0,
+        };
+        update(data)
+        
+    })
 
     $('form.addsession').on('submit', function(event){
         event.preventDefault();
@@ -103,7 +107,10 @@ $(document).ready(function() {
             FK_Userid: id,
         }).then(function(data){
             console.log(data)
+            // getwineries(memberid);
             window.location.reload();
+            // addwineryform.style.display = "none";
+            // winerydisplay.style.display = "block";
         }).catch(handleLoginErr);
     };
 
@@ -112,6 +119,17 @@ $(document).ready(function() {
         // $("#alert .msg").text(err.responseJSON.errors[0].message);
         // $("#alert").fadeIn(500);
       };
+
+    function update(data) {
+        $.ajax({
+            method: "PUT",
+            url: "/api/updatewinery",
+            data: data,
+        }).then(function(result){
+            console.log(result)
+            window.location.reload();
+        })
+    }
 
 //get vendor's wineries and populate the page
     function getwineries(id){
@@ -126,6 +144,17 @@ $(document).ready(function() {
         })
         
     };
+    function getwineries_unc(id){
+        $.get("/api/wineries_uncdata/" + id, function(data){
+
+        }).then(function(data){
+            data.forEach(element => {
+                const wineries = renderwineries_unc(element);
+                $('#uncurrent').append(wineries);
+        
+            });
+        })
+    }
 //enter into individual winery
     function wineryenter(id){
         
@@ -156,9 +185,28 @@ $(document).ready(function() {
     function renderwineries(data){
         const block = `<div class="card border-dark mb-3">
         
-               <div class="card-header">${data.wineryname}<span><button class="btn btn-success ml-5 winerybtn" data="${data.id}">Enter</button></span></div>
+               <div class="card-header">${data.wineryname}
+               <span>
+               <button class="btn btn-success ml-5 winerybtn" data="${data.id}">Enter</button>
+               <button class="btn btn-danger ml-5 delwinerybtn" data="${data.id}">Delete</button>
+               </span></div>
                <div class="card-body text-dark">
                  <h5 class="card-title" data=${data.id}>${data.wineryname}</h5>
+                 <p class="card-text">Address: ${data.wineaddress}</p>
+                 <p class="card-text">Email: ${data.wineemail}</p>
+                 <a href="/winery?winery_id=${data.id}">${data.wineryname}</a>
+                 <p class="card-text">Phone: ${data.winephone}</p>
+               </div>
+             </div>`
+             return block
+       };
+
+       function renderwineries_unc(data){
+        const block = `<div class="card border-dark mb-3">
+        
+               <div class="card-header">${data.wineryname}</div>
+               <div class="card-body text-dark">
+                 
                  <p class="card-text">Address: ${data.wineaddress}</p>
                  <p class="card-text">Email: ${data.wineemail}</p>
                  <a href="/winery?winery_id=${data.id}">${data.wineryname}</a>

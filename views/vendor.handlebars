@@ -37,8 +37,11 @@
       <div class="row">
         <div class="col-12">
 
+        {{!-- Display all wineries block --}}
+          <h3>Current Wineries</h3>
           <div id="wineries"></div>
 
+        {{!-- Individual winery block --}}
           <div id="winerydetail">
             <h2>Welcome Winery <span class="winery-name"></span></h2>
             <form class="addsession">
@@ -53,6 +56,8 @@
             <div id="session"></div>            
           </div>
 
+
+        {{!-- Add wineries block --}}
         <form class="addwinery" id="addwineryform">
           <div class="form-group">
             <label for="exampleInputWinery">Winery name</label>
@@ -75,7 +80,12 @@
             <input type="wineemail" class="form-control" id="wineemail-input" placeholder="Email">
           </div>
           <button type="submit" class="btn btn-primary">Add Winery</button>                    
-        </form>                    
+        </form>
+        
+          <h3>Non-Current Wineries</h3>
+          <div id="uncurrent"></div>
+
+                                     
 
 
         </div>

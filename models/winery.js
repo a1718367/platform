@@ -32,6 +32,10 @@ module.exports = function(sequelize, DataType){
         },
         FK_Userid:{
             type: DataType.STRING,
+        },
+        current: {
+            type: DataType.BOOLEAN,
+            defaultValue: true,
         }
 
     });

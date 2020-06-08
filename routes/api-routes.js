@@ -73,7 +73,19 @@ module.exports = function(app) {
   app.get("/api/wineries_data/:id", function(req, res){
     db.Wineries.findAll({
       where: {
-        FK_Userid: req.params.id
+        FK_Userid: req.params.id,
+        current: true,
+      }
+    }).then(function(result){
+      res.json(result)
+    })
+  });
+
+  app.get("/api/wineries_uncdata/:id", function(req, res){
+    db.Wineries.findAll({
+      where: {
+        FK_Userid: req.params.id,
+        current: false,
       }
     }).then(function(result){
       res.json(result)
@@ -115,4 +127,18 @@ module.exports = function(app) {
       res.json(result);
     });
   });
+
+  app.put("/api/updatewinery", function(req, res) {
+    db.Wineries.update({
+      current: req.body.current,
+    },{
+      where: {
+        id: req.body.id
+      }
+    }).then(function(result){
+      res.json(result)
+    }).catch(function(err) {
+      res.json(err)
+    })
+  })
 };
