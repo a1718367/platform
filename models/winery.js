@@ -48,4 +48,4 @@ module.exports = function(sequelize, DataType){
     // };
 
     return Wineries;
-}
+};

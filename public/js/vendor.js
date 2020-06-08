@@ -1,15 +1,22 @@
 $(document).ready(function() {
 
     let memberid;
+    let wineryid;
     const wname = $('#wineryname-input');
     const waddress = $('#wineaddress-input');
     const wpostcode = $('#winepostcode-input');
     const wphone = $('#winephone-input');
     const wemail = $('#wineemail-input');
-    const session = $('#sessiondatetime');
-    const winerydisplay = document.querySelector("#wineries");
+
+    const eventname = $('#eventname');
+    const eventdate = $('#eventdate');
+    const eventtime = $('#eventtime');
+    const eventcapacity = $('#eventcapacity');
+    
+    const winerydisplay = document.querySelector("#winerydisplay");
     const winerydetail = document.querySelector("#winerydetail");
     const addwineryform = document.querySelector("#addwineryform");
+    
 
     var cday = moment().format('dddd, Do MMM YYYY, h:mm:ss a');
     $('#currentday').text(cday);
@@ -47,12 +54,15 @@ $(document).ready(function() {
     });
 
     $(document).on('click','.winerybtn', function(){
-        const wineryid = $(this).attr("data");
+        wineryid = $(this).attr("data");
         console.log(wineryid)
         wineryenter(wineryid)
         winerydata(wineryid)
         winerydisplay.style.display = "none";
         winerydetail.style.display = "block";
+        getevent(wineryid)
+        return wineryid;
+        
         
     });
 
@@ -68,8 +78,23 @@ $(document).ready(function() {
 
     $('form.addsession').on('submit', function(event){
         event.preventDefault();
-        const newsession = session.val().trim()
-        console.log(newsession, typeof newsession)
+
+        const eventData = {
+
+            eventname: $('#eventname').val().trim(),
+            eventdate: $('#eventdate').val().trim(),
+            eventtime: $('#eventtime').val().trim(),
+            capacity: $('#eventcapacity').val().trim(),
+            FK_Wineryid: wineryid,
+        };
+        console.log(eventData);
+        addevent(eventData.eventname,eventData.eventdate,eventData.eventtime,eventData.capacity,eventData.FK_Wineryid)
+        eventname.val("");
+        eventdate.val("");
+        eventtime.val("");
+        eventcapacity.val("");
+        window.location.reload();
+
     });
 
     $('#addwinerysidenav'). on('click',function(){
@@ -80,10 +105,11 @@ $(document).ready(function() {
     });
 
     $('#showwinerysidenav').on("click", function(){
-        addwineryform.style.display = "none";
-        winerydetail.style.display = "none";
-        winerydisplay.style.display = "block";
+        // addwineryform.style.display = "none";
+        // winerydetail.style.display = "none";
+        // winerydisplay.style.display = "block";
         closeNav()
+        window.location.reload();
     });
 
     $('#opennav').on("click", function(){
@@ -111,6 +137,19 @@ $(document).ready(function() {
             window.location.reload();
             // addwineryform.style.display = "none";
             // winerydisplay.style.display = "block";
+        }).catch(handleLoginErr);
+    };
+
+    function addevent(name,date,time,capacity,id){
+        $.post("/api/addevent", {
+            eventname: name,
+            eventdate: date,
+            eventtime: time,
+            capacity: capacity,
+            FK_Wineryid: id,
+        }).then(function(data){
+            console.log(data)
+
         }).catch(handleLoginErr);
     };
 
@@ -154,7 +193,21 @@ $(document).ready(function() {
         
             });
         })
+    };
+
+    function getevent(id){
+        $.get("/api/event/" + id, function(){
+
+        }).then(function(data){
+            console.log(data)
+            data.forEach(element => {
+                const eventdata = renderevent(element);
+                $('#event').append(eventdata);
+                
+            });
+        })
     }
+
 //enter into individual winery
     function wineryenter(id){
         
@@ -179,6 +232,7 @@ $(document).ready(function() {
         })
     };
 
+
 //Rending functions
 
 
@@ -191,12 +245,20 @@ $(document).ready(function() {
                <button class="btn btn-danger ml-5 delwinerybtn" data="${data.id}">Delete</button>
                </span></div>
                <div class="card-body text-dark">
+                <div class="row">
+                <div class="col-sm-12 col-md-4">
                  <h5 class="card-title" data=${data.id}>${data.wineryname}</h5>
                  <p class="card-text">Address: ${data.wineaddress}</p>
                  <p class="card-text">Email: ${data.wineemail}</p>
                  <a href="/winery?winery_id=${data.id}">${data.wineryname}</a>
                  <p class="card-text">Phone: ${data.winephone}</p>
                </div>
+               <div class="col-sm-12 col-md-8">
+
+               </div>
+               </div>
+               </div>
+
              </div>`
              return block
        };
@@ -215,6 +277,17 @@ $(document).ready(function() {
              </div>`
              return block
        };
+
+       function renderevent(data){
+           const block = `
+           <tr>
+           <td>${data.eventname}</td>
+           <td>${data.eventdate}</td>
+           <td>${data.eventtime}</td>
+           <td>${data.capacity}</td>
+           </tr>`
+           return block
+       }
 
 
 

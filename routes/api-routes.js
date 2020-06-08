@@ -47,6 +47,25 @@ module.exports = function(app) {
     });
   });
 
+  //Add event
+  app.post("/api/addevent", function(req, res){
+    
+    db.Events.create(req.body).then(function(result){
+      res.json(result);
+    }).catch(function(err){
+      res.status(401).json(err);
+    })
+  });
+
+  app.get("/api/event/:id", function(req, res){
+    db.Events.findAll({
+      where: {
+        FK_Wineryid: req.params.id,
+      }
+    }).then(function(result){
+      res.json(result)
+    })
+  });
 
 
   // Route for logging user out

@@ -38,22 +38,48 @@
         <div class="col-12">
 
         {{!-- Display all wineries block --}}
-          <h3>Current Wineries</h3>
-          <div id="wineries"></div>
+          
+          <div id="winerydisplay">
+            <h3>Current Wineries</h3>
+            <div id="wineries"></div>
+            <h3>Non-Current Wineries</h3>
+            <div id="uncurrent"></div>
+          </div>
+          
 
         {{!-- Individual winery block --}}
           <div id="winerydetail">
             <h2>Welcome Winery <span class="winery-name"></span></h2>
             <form class="addsession">
             <div class="form-group">
-                <label class="control-label" for="date">Date</label>
-                <input type= "datetime-local" class="form-control" name="date" id="sessiondatetime" placeholder="DD/MM/YYYY">
+                <label class="control-label" for="eventname">Event Name</label>
+                <input type="text" class="form-control" name="eventname" id="eventname" placeholder="Event's Name">
+                <label class="control-label" for="eventdate">Date</label>
+                <input type="date" class="form-control" name="eventdate" id="eventdate" placeholder="DD/MM/YYYY">
+                <label class="control-label" for="eventtime">Time</label>
+                <input type="time" class="form-control" name="eventtime" id="eventtime" placeholder="hh:mm">
+                <label class="control-label" for="eventcapacity">Capacity</label>
+                <input type="number" class="form-control" name="eventcapacity" id="eventcapacity" placeholder="Capacity">
               </div>         
 
-            <button type="submit" class="btn btn-primary">Add Session</button>                    
+            <button type="submit" class="btn btn-primary">Add Event</button>                    
             </form>
-            <h2>Sessions</h2>
-            <div id="session"></div>            
+            <h2 class="mt-3">Event</h2>
+            <table class="table">
+           <thread class="thread-dark">
+           <tr>
+           <th scope="col">Event Name</th>
+           <th scope="col">Date</th>
+           <th scope="col">Time</th>
+           <th scope="col">Capacity</th>
+           </tr>
+           </thread>
+           <tbody id="event">
+             
+           </tbody>
+          
+           </table>
+            {{!-- <div id="event"></div>             --}}
           </div>
 
 
@@ -82,11 +108,6 @@
           <button type="submit" class="btn btn-primary">Add Winery</button>                    
         </form>
         
-          <h3>Non-Current Wineries</h3>
-          <div id="uncurrent"></div>
-
-                                     
-
 
         </div>
 
