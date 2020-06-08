@@ -8,14 +8,8 @@ $(document).ready(function() {
     const wpostcode = $('#winepostcode-input');
     const wphone = $('#winephone-input');
     const wemail = $('#wineemail-input');
-    const session = $('#sessiondatetime');
     const winerydisplay = document.querySelector("#wineries");
-    const winerydetail = document.querySelector("#winerydetail");
-    const addwineryform = document.querySelector("#addwineryform");
-
-    var cday = moment().format('dddd, Do MMM YYYY, h:mm:ss a');
-    $('#currentday').text(cday);
-
+    const winerydetail = document.querySelector("#winerydetail")
     
 
     $.get("/api/user_data").then(function(data) {
@@ -44,7 +38,6 @@ $(document).ready(function() {
             wpostcode.val("");
             wphone.val("");
             wemail.val("");
-
         });
 
         getwineries(memberid);
@@ -59,39 +52,11 @@ $(document).ready(function() {
         winerydisplay.style.display = "none";
         winerydetail.style.display = "block";
         
+
         
     });
 
-    $('form.addsession').on('submit', function(event){
-        event.preventDefault();
-        const newsession = session.val().trim()
-        console.log(newsession, typeof newsession)
-    });
 
-    $('#addwinerysidenav'). on('click',function(){
-        winerydisplay.style.display = "none"
-        winerydetail.style.display = "none";
-        addwineryform.style.display = "block"
-        closeNav()
-    });
-
-    $('#showwinerysidenav').on("click", function(){
-        addwineryform.style.display = "none";
-        winerydetail.style.display = "none";
-        winerydisplay.style.display = "block";
-        closeNav()
-    });
-
-    $('#opennav').on("click", function(){
-        openNav();
-    });
-
-    $('#closenav').on("click", function(){
-        closeNav();
-    })
-
-
-    //######### functions ###########//
 
     function addwinery(name,address,postcode,phone,email, id){
         $.post("/api/addwinery", {
@@ -113,7 +78,7 @@ $(document).ready(function() {
         // $("#alert").fadeIn(500);
       };
 
-//get vendor's wineries and populate the page
+
     function getwineries(id){
         $.get("/api/wineries_data/" + id, function(data){
             // console.log(data)
@@ -126,7 +91,7 @@ $(document).ready(function() {
         })
         
     };
-//enter into individual winery
+
     function wineryenter(id){
         
         $.post("/api/wineryinfo/", {
@@ -134,23 +99,23 @@ $(document).ready(function() {
         }).then(function(result){
             // window.location.replace("/winery")
             // const x = result[0].id;
-            $('.winery-name').text(result[0].wineryname)
             console.log(result)
+            $('.winery-name').text(result[0].wineryname)
 
         }).catch(function(err){
             console.log(err);
         })
     }
-//same result from above but using get
+
     function winerydata(id){
         $.get("/api/winerydata/"+ id, function(data){
             
         }).then(function(data){
             console.log(data)
+            
         })
-    };
+    }
 
-//Rending functions
 
 
     function renderwineries(data){
@@ -163,28 +128,9 @@ $(document).ready(function() {
                  <p class="card-text">Email: ${data.wineemail}</p>
                  <a href="/winery?winery_id=${data.id}">${data.wineryname}</a>
                  <p class="card-text">Phone: ${data.winephone}</p>
+            
                </div>
              </div>`
              return block
-       };
-
-
-
-  // side nav
-
-  function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-    // document.getElementById("main").style.marginLeft = "250px";
-    document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-  };
-
-  function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-    // document.getElementById("main").style.marginLeft = "50px";
-    document.body.style.backgroundColor = "white";
-  };
-
+       }
   });
-
-
-

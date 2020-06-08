@@ -1,23 +1,59 @@
+  <div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" id="closenav">&times;</a>
+
+  <a id="addwinerysidenav" href="#">Add Winery</a>
+  <a id="showwinerysidenav" href="#">Show Wineries</a>
+  <a href="#">Clients</a>
+  <a href="#">Contact</a>
+</div>
+
+
+  
+  
+  
   <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="/logout">
         Logout
       </a>
+      <span><Menu id="opennav" class="navbar-brand">Menu</Menu></span>
     </div>
+    
   </div>
 </nav>
-  <div class="container">
+
+
+  <div class="container" id="main">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <h2>Welcome Vendor <span class="member-name"></span></h2>
         <h2>Welcome Vendor <span class="memberid"></span></h2>
+        <h3 id="currentday"></h3>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-sm-6">
-        <form class="addwinery">
+    <div class="container mt-3">
+      <div class="row">
+        <div class="col-12">
+
+          <div id="wineries"></div>
+
+          <div id="winerydetail">
+            <h2>Welcome Winery <span class="winery-name"></span></h2>
+            <form class="addsession">
+            <div class="form-group">
+                <label class="control-label" for="date">Date</label>
+                <input type= "datetime-local" class="form-control" name="date" id="sessiondatetime" placeholder="DD/MM/YYYY">
+              </div>         
+
+            <button type="submit" class="btn btn-primary">Add Session</button>                    
+            </form>
+            <h2>Sessions</h2>
+            <div id="session"></div>            
+          </div>
+
+        <form class="addwinery" id="addwineryform">
           <div class="form-group">
             <label for="exampleInputWinery">Winery name</label>
             <input type="wineryname" class="form-control" id="wineryname-input" placeholder="Winery name">
@@ -39,20 +75,17 @@
             <input type="wineemail" class="form-control" id="wineemail-input" placeholder="Email">
           </div>
           <button type="submit" class="btn btn-primary">Add Winery</button>                    
-        </form>
+        </form>                    
 
-      </div>
-      <div class="col-sm-6">
-        <div class="container">
-          <h1>Wineries</h1>
-          <div id="wineries"></div>
 
         </div>
-
-
-
 
       </div>
 
     </div>
+
+
+
+    </div>
   </div>
+  <script type="text/javascript" src="js/vendor.js"></script>

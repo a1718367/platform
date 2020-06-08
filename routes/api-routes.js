@@ -86,9 +86,23 @@ module.exports = function(app) {
         id: req.body.wineryid
       }
     }).then(function(result){
+      
       res.json(result)
     })
   });
+
+
+  app.get("/api/winerydata/:id",function(req,res){
+    db.Wineries.findAll({
+      where: {
+        id: req.params.id
+      }
+    }).then(function(result){
+      res.json(result)
+    });
+  });
+
+
 
   app.get("/api/winery", function(req, res){
     var query = {};

@@ -2,3 +2,7 @@ form.signup,
 form.login {
   margin-top: 50px;
 }
+
+#winerydetail, #addwinery, #addwineryform{
+  display: none;
+}
